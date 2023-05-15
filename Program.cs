@@ -52,7 +52,7 @@ internal class Program
         }
     }
 
-    private static int PickNextSquadIndex(List<Squad> squads, List<int> currentPicks, int sameSquadWeightMultiplier) => 
+    private static int PickNextSquadIndex(List<Squad> squads, List<int> currentPicks, double sameSquadWeightMultiplier) => 
         ChoseRandomSquadBasedOnProportions(GetProportionalRanges(squads, CalculateRelativeWeights(squads, currentPicks, sameSquadWeightMultiplier)));
 
     private static int ChoseRandomSquadBasedOnProportions(List<(int start, int end, int squadIndex)> ranges)
@@ -81,14 +81,14 @@ internal class Program
                 continue;
             }
 
-            var range = (start: currentStart, end: (currentStart + finalWeight), squadIndex: squadIndex);
+            var range = (start: currentStart, end: (currentStart + finalWeight), squadIndex);
             currentStart = range.end;
             ranges.Add(range);
         }
         return ranges;
     }
 
-    private static double[] CalculateRelativeWeights(List<Squad> squads, List<int> currentPicks, int sameSquadWeightMultiplier)
+    private static double[] CalculateRelativeWeights(List<Squad> squads, List<int> currentPicks, double sameSquadWeightMultiplier)
     {
         var weights = new double[squads.Count];
         for (var squadIndex = 0; squadIndex < squads.Count; squadIndex++)
@@ -99,7 +99,7 @@ internal class Program
         return weights;
     }
 
-    private static double GetWeightRelativeToTimesPicked(double value, int valueMultiplier) => 
+    private static double GetWeightRelativeToTimesPicked(double value, double valueMultiplier) => 
         1/(valueMultiplier * value + 1);
 }
 
@@ -109,7 +109,7 @@ class Settings
 
     public List<int> GroupSizes { get; set; }
 
-    public int SameSquadWeightMultiplier { get; set;  }
+    public double SameSquadWeightMultiplier { get; set;  }
 }
 
 class Squad
